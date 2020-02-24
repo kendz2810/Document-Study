@@ -1,0 +1,90 @@
+//Thư viện office
+using OfficeOpenXml;
+//dùng để cho color vào
+using System.Drawing;
+//Lấy ra danh sách nhé
+List<AssyProgress> danhsach = new List<AssyProgress>();
+//Cả một cục luôn
+//Sử dụng ExcellPage nhé
+using (ExcelPackage packag= new ExcelPackage()){
+	//Tạo một cái sheet excel trước đã
+	ExcelWorksheet worksheet = packag.worksheet.Worksheets.Add("ListTrainee");
+	//Gán giá trị luôn nha
+	worksheet.Cells[1,1].Value ="Giá trị";
+	//Rồi dùng vòng for lặp trí củ cái giá trị này nhé
+	foreach(AssyProgress item in danhsach){}
+	
+	//cái này không biết cú pháp tại sao lại phải dùng using nhé
+	using(var range = worksheet.Cells[1,1,1,10]){
+		range.merge = true;
+		//Setting bold font
+		range.Style.Font.Bold = true;
+	}
+	//Cuối cùng vứt cả cục này vào nữa nhé
+	// Set autofit column
+		worksheet.Cells.AutoFitColumns();
+		Response.Clear();
+		Response.AddHeader("content-disposition", "attachment;  filename=DanhSachHocVien " + DateTime.Today.ToString("MMM dd yyyy") + ".xlsx");
+		Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+		Response.BinaryWrite(package.GetAsByteArray());
+		Response.End();
+}
+
+ using (ExcelPackage package = new ExcelPackage())
+            {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("ListTrainee");
+                worksheet.Cells[1, 1].Value = "Danh sách học viên";
+                worksheet.Cells[3, 1].Value = "No.";
+                worksheet.Cells[3, 2].Value = "Mã học viên";
+                worksheet.Cells[3, 3].Value = "Tên học viên";
+                worksheet.Cells[3, 4].Value = "Model";
+                worksheet.Cells[3, 5].Value = "Station";
+                worksheet.Cells[3, 6].Value = "Ngày vào";
+                worksheet.Cells[3, 7].Value = "Dây chuyền";
+                worksheet.Cells[3, 8].Value = "Remark";
+
+                for (int i = 0; i < danhsach.Count; i++)
+                {
+                    worksheet.Cells[4 + i, 1].Value = i + 1;
+                    worksheet.Cells[4 + i, 2].Value = danhsach[i].USER_NAME;
+                    worksheet.Cells[4 + i, 3].Value = danhsach[i].FULL_NAME;
+                    worksheet.Cells[4 + i, 4].Value = danhsach[i].MODEL_NAME;
+                    worksheet.Cells[4 + i, 5].Value = danhsach[i].STATION_NAME;
+                    worksheet.Cells[4 + i, 6].Value = danhsach[i].NgayVao;
+                    worksheet.Cells[4 + i, 7].Value = danhsach[i].LINE;
+                    worksheet.Cells[4 + i, 8].Value = danhsach[i].Remark;
+                }
+                //Style cho dòng đầu 
+                using (var range = worksheet.Cells[1, 1, 1, 10])
+                {
+                    range.Merge = true;
+                    // Setting bold font
+                    range.Style.Font.Bold = true;
+                    range.Style.Font.Color.SetColor(Color.FromArgb(0, 5, 138, 235));
+                    // Setting font size
+                    range.Style.Font.Size = 18;
+                    // Set align text
+                    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    range.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                }
+                //Style cho dòng head của bảng
+                using (var range = worksheet.Cells[3, 1, 3, 10])
+                {
+                    // Setting bold font
+                    range.Style.Font.Bold = true;
+                    // Setting font color
+                    range.Style.Font.Color.SetColor(Color.FromArgb(0, 5, 138, 235));
+                    // Set align text
+                    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    range.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                }
+
+                // Set autofit column
+                worksheet.Cells.AutoFitColumns();
+                Response.Clear();
+                Response.AddHeader("content-disposition", "attachment;  filename=DanhSachHocVien " + DateTime.Today.ToString("MMM dd yyyy") + ".xlsx");
+                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                Response.BinaryWrite(package.GetAsByteArray());
+                Response.End();
+                return null;
+            }
